@@ -3,7 +3,7 @@ import pickle
 import re
 
 def dados():
-    path = '/home/maxtelll/Documents/arquivos/ic_novo_backup/dados/no_msg.P'
+    path = '../dados_depressao/no_msg.P'
 
     def findWholeWord(w):
         return re.compile(r'\b({0})\b'.format(w), flags=re.IGNORECASE).search
@@ -24,5 +24,7 @@ def dados():
         # print(len(tags))
 
 
-dados()
+a, b = dados()
 
+print(len(a))
+print(len(b))
