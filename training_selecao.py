@@ -15,6 +15,7 @@ from Models import Models
 from obter_dados import dados
 from tratar_texto import limpe_texto
 from sklearn.model_selection import train_test_split
+from pickle import dump, load
 
 
 def Classify(X, Y, cls, rep, k=5000):
@@ -24,13 +25,25 @@ def Classify(X, Y, cls, rep, k=5000):
     print(title)
 
     # Creating the K-fold cross validator
+    if 'w2v' in rep:
+        train_x = load(open('w2v_rep/{}_train_x.pkl'.format(rep), 'rb'))
+        train_y = load(open('w2v_rep/{}_train_y.pkl'.format(rep), 'rb'))
+        test_x = load(open('w2v_rep/{}_test_x.pkl'.format(rep), 'rb'))
+        test_y = load(open('w2v_rep/{}_test_y.pkl'.format(rep), 'rb'))
+    else:
 
-    X_train, X_test, y_train, y_test =  train_test_split(X, Y,test_size=0.2,random_state=123,stratify=Y)
-    train_x, train_y, test_x, test_y = Representations().get_representation(rep=rep, train_x=X_train, train_y=y_train,
-                                                                            test_x=X_test, test_y=y_test, k=k, cat=None)
-    sm = SMOTE(sampling_strategy='minority',
-                   random_state=None)
-    train_x, train_y = sm.fit_sample(train_x, train_y)
+        X_train, X_test, y_train, y_test =  train_test_split(X, Y,test_size=0.2,random_state=123,stratify=Y)
+        train_x, train_y, test_x, test_y = Representations().get_representation(rep=rep, train_x=X_train, train_y=y_train,
+                                                                                test_x=X_test, test_y=y_test, k=k, cat=None)
+        sm = SMOTE(sampling_strategy='minority',
+                       random_state=None)
+        train_x, train_y = sm.fit_sample(train_x, train_y)
+
+    # dump(train_x, open('w2v_rep/{}_train_x.pkl'.format(rep), 'wb'))
+    # dump(train_y, open('w2v_rep/{}_train_y.pkl'.format(rep), 'wb'))
+    # dump(test_x, open('w2v_rep/{}_test_x.pkl'.format(rep), 'wb'))
+    # dump(test_y, open('w2v_rep/{}_test_y.pkl'.format(rep), 'wb'))
+    # return
 
     classifier = Models().get_classifier(cls)
     classifier.fit(train_x, train_y)
@@ -48,21 +61,22 @@ def Classify(X, Y, cls, rep, k=5000):
 
 
 classificadores = ['MLP']
-representacao = ['selecao']
+representacao = ['w2v_mean', 'w2v']
 
 textos, tags = dados()
+print(len(textos))
+
 textos, tags = limpe_texto(textos, tags)
 
 
-
 print(len(textos))
-print(len([t for t in tags if t =='no']))
+print(len([t for t in tags if t ==0]))
 
-X_train, X_validacao, y_train, y_validacao = train_test_split(textos, tags,test_size=0.2,
-    random_state=123,stratify=tags)
+# X_train, X_validacao, y_train, y_validacao = train_test_split(textos, tags,test_size=0.2,
+#     random_state=123,stratify=tags)
 
-for k in range(5000, 60000, 1000):
+for k in range(5000, 6000, 1000):
     for c in classificadores:
         for r in representacao:
-            Classify(X_train, y_train, c, r, k)
-
+            # Classify(X_train, y_train, c, r, k)
+            Classify(textos, tags, c, r, k)

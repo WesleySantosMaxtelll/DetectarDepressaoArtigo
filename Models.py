@@ -17,8 +17,10 @@ class Models:
         elif (name == 'NB'):
             return MultinomialNB(alpha=0.1)
         elif (name == 'MLP'):
-            return MLPClassifier(solver='sgd',hidden_layer_sizes=(150, 300, 150, 100), alpha=1e-5, max_iter=500,
-                                 learning_rate_init=0.05, power_t=0.1, learning_rate='constant',  random_state=1)
+            # return MLPClassifier(hidden_layer_sizes=(30, 30, 30, 30, 30, 30, 30), alpha=1e-5, max_iter=500,  n_iter_no_change=50,
+            #                      learning_rate_init=0.05, power_t=0.1, learning_rate='constant',  random_state=1)
+            return MLPClassifier(learning_rate_init=0.005, verbose=True, tol=1e-6,
+                                 hidden_layer_sizes=(20, 10, 10, 10, 10, 10, 10), alpha=0.01)
         else:
             raise NameError('Classifier Unavailable')
 

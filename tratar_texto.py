@@ -6,7 +6,7 @@ palavras = stopwords.words('portuguese')
 
 def limpe_texto(textos, tags):
     textos_saida, tags_saida = [], []
-
+    d = {'no':0, 'yes':1}
     for t, l in zip(textos, tags):
         t = t.encode('ascii', 'ignore').decode('ascii')
         document = re.sub(r'\W', ' ', str(t))
@@ -20,11 +20,11 @@ def limpe_texto(textos, tags):
         document = re.sub(r'^b\s+', '', document)
         # Converting to Lowercase
         document = document.lower()
-        if re.search(r'\beu\b', document) and random.random() > 0.75:
+        if re.search(r'\beu\b', document):
             document = document.split()
             texto_final = ' '.join([d for d in document if d not in palavras])
             textos_saida.append(texto_final)
-            tags_saida.append(l)
+            tags_saida.append(d[l])
 
 
     return textos_saida, tags_saida

@@ -6,6 +6,10 @@ from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 import re
 from selecao_de_atributos import Selecao
 
+from w2v import w2v
+from w2v_media import w2v_mean
+
+
 class Representations:
 
     def Create_Vectorizer(self, name, k, cat):
@@ -21,6 +25,12 @@ class Representations:
 
         elif (name == 'selecao'):
             return Selecao(k, cat)
+
+        elif (name == 'w2v'):
+            return w2v()
+
+        elif (name == 'w2v_mean'):
+            return w2v_mean()
         else:
             raise NameError('Vectorizer not found')
 

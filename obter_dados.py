@@ -24,7 +24,7 @@ def dados():
         # print(len(tags))
 
 
-a, b = dados()
-
-print(len(a))
-print(len(b))
+# a, b = dados()
+#
+# print(len(a))
+# print(len(b))
